@@ -131,6 +131,7 @@ button.small:active{
     align-content: center;
     align-items: center;
     text-align: center;
+    justify-content: center;
 
     animation: popupfadein 0.3s cubic-bezier(0, 0, 0, 1);
 }
