@@ -47,15 +47,16 @@ function popup(type) {
                 mcdimg.style = `background-color: ${localStorage.getItem("char/color")}`
                 pdiv.append(mcdimg)
 
-                var accbtn = document.createElement("button")
-                accbtn.innerText = "That's me!"
-                accbtn.setAttribute("onclick", 'localStorage.setItem("username", document.getElementById("usrnam").value); username = document.getElementById("usrnam").value; popup("close");')
-                pdiv.append(accbtn)
                 var edtbtn = document.createElement("button")
                 edtbtn.innerText = "Edit Mii"
                 edtbtn.className = "small"
                 edtbtn.setAttribute("onclick", 'popup("close"); popup("char")')
                 pdiv.append(edtbtn)
+
+                var accbtn = document.createElement("button")
+                accbtn.innerText = "That's me!"
+                accbtn.setAttribute("onclick", 'localStorage.setItem("username", document.getElementById("usrnam").value); username = document.getElementById("usrnam").value; popup("close");')
+                pdiv.append(accbtn)
             popup.append(pdiv)
         }
         if (type == "char"){
