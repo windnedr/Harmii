@@ -7,11 +7,18 @@ document.addEventListener("scroll", (event) => {
 var connected = false
 var muspitch = 1
 var username = "HarmoniiUser"
+var username = localStorage.getItem("username")
 var miivoices = {
     path: "assets/sfx/mii/",
-    length: 15
+    length: 15,
+    conditions: [{
+        string: "ok",
+        id: 2
+    }]
 }
+var miiAPI = "https://mii-unsecure.ariankordi.net/miis/image.png?data="
 var websocket
+var lastWSerror
 onscroll = (event) => { }
 
 function popup(type) {
@@ -45,6 +52,7 @@ function popup(type) {
                 mcdimg.id = "mcdimg"
                 mcdimg.src = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${localStorage.getItem("char")}`
                 mcdimg.style = `background-color: ${localStorage.getItem("char/color")}`
+                mcdimg.className = "mcdimg"
                 pdiv.append(mcdimg)
 
                 var edtbtn = document.createElement("button")
@@ -67,6 +75,7 @@ function popup(type) {
                 mcdimg.id = "mcdimg"
                 mcdimg.src = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${localStorage.getItem("char")}`
                 mcdimg.style = `background-color: ${localStorage.getItem("char/color")}`
+                mcdimg.className = "mcdimg"
 
                 pdiv.append(mcdimg)
 
@@ -101,6 +110,28 @@ function popup(type) {
                 accbtn.setAttribute("onclick", 'localStorage.setItem("char", document.getElementById("charID").value); localStorage.setItem("char/color", document.getElementById("charCol").value); popup("close"); popup("settings")')
                 pdiv.append(accbtn)
             popup.append(pdiv)
+        } if (type = "roomErr"){
+            var pdiv = document.createElement("div")
+            pdiv.className = "settings"
+                var title = document.createElement("h1")
+                title.innerText = `An error occurred D:`
+                var p = document.createElement("p")
+                p.innerText = `${lastWSerror}`
+
+                pdiv.append(title)
+                pdiv.append(p)
+            popup.append(pdiv)
+        } if (type = "roomcClose"){
+            var pdiv = document.createElement("div")
+            pdiv.className = "settings"
+                var title = document.createElement("h1")
+                title.innerText = `Room closed D:`
+                var p = document.createElement("p")
+                p.innerText = `${lastWSerror}`
+
+                pdiv.append(title)
+                pdiv.append(p)
+            popup.append(pdiv)
         }
 
         bg.append(popup)
@@ -110,7 +141,6 @@ function popup(type) {
     indexButtons()
 }
 function charprev(){
-    localStorage.setItem("char", document.getElementById("charID").value)
     document.getElementById("mcdimg").src = `https://mii-unsecure.ariankordi.net/miis/image.png?data=${document.getElementById("charID").value}`
     document.getElementById("mcdimg").style = `background-color: ${document.getElementById("charCol").value}`
     document.getElementById("colorfillin").style = `background-color: ${document.getElementById("charCol").value}`
@@ -146,13 +176,20 @@ function connectToWebsocket(wsurl){
                 playSound("assets/sfx/leave.wav")
             }
 
-            displayMessage("server", j.message, j.username)
+            displayMessage("server", j.message, j.username, {})
         } else {
             playSound(miivoices.path + Math.floor(Math.random() * miivoices.length + 1) + ".wav")
             if (j.username == username){
-                displayMessage("you", j.message, j.username)
+                displayMessage("you", j.message, j.username, j.char)
             } else {
-                displayMessage("nyou", j.message, j.username)
+                if (j.char){
+                    displayMessage("nyou", j.message, j.username, j.char)
+                } else {
+                    displayMessage("nyou", j.message, j.username, {
+                        data: "0800400308040402020c0301060406020a0000000000000804000a0100214004000214031304170d04000a040109",
+                        background: "#880044ff"
+                    })
+                }
             }
         }
         if (scrollScreen){
@@ -163,13 +200,21 @@ function connectToWebsocket(wsurl){
     websocket.onclose = (e) => {
         loadScreenRemove(2)
         connected = false
+        popup("roomClosed");
     }
+    websocket.addEventListener("error", (event) => {
+        lastWSerror = event
+        popup("roomErr");
+    });
 }
 function sendMessage(){
     var j = {
         username: username,
         message: document.getElementById("bartxt").value,
-        character: localStorage.getItem("char"),
+        char: {
+            data: localStorage.getItem("char"),
+            background: localStorage.getItem("char/color")
+        },
     }
     document.getElementById("bartxt").value = ""
     websocket.send(JSON.stringify(j))
@@ -234,7 +279,7 @@ function chatScreen(){
         return document.getElementById("chatdiv");
     }
 }
-function displayMessage(type, message, username){
+function displayMessage(type, message, username, charInfo){
     var payload = document.createElement("div")
     payload.id = "message"
     if (type == "server"){
@@ -244,23 +289,31 @@ function displayMessage(type, message, username){
     if (type == "nyou"){
         payload.className = "nyou"
         var nameplate = document.createElement("p")
-        nameplate.className = "username"
-        nameplate.innerText = username
+            nameplate.className = "username"
+            nameplate.innerText = username
         var m = document.createElement("p")
-        m.className = "message"
-        m.innerText = message
+            m.className = "message"
+            m.innerText = message
         payload.append(m) 
         payload.append(nameplate) 
     }
     if (type == "you"){
         payload.className = "you"
-        var nameplate = document.createElement("p")
-        nameplate.className = "username"
-        nameplate.innerText = username
-        var m = document.createElement("p")
-        m.className = "message"
-        m.innerText = message
-        payload.append(m) 
+        var d = document.createElement("div")
+            var nameplate = document.createElement("p")
+                nameplate.className = "username"
+                nameplate.innerText = username
+            var m = document.createElement("p")
+                m.className = "message"
+                m.innerText = message
+                d.append(m)
+            var char = document.createElement("img")
+                char.src = `${miiAPI}${charInfo.data}`
+                char.style = `background-color: ${char.background}; height: 32px;`
+                char.className = "mcdimg"
+                d.append(char)
+        
+        payload.append(d) 
         payload.append(nameplate) 
     }
     document.getElementById("msgcont").append(payload)
