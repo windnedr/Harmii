@@ -21,6 +21,16 @@ var websocket
 var lastWSerror
 onscroll = (event) => { }
 
+//stolen
+const escapeHtml = unsafe => {
+  return unsafe
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+};
+
 function popup(type) {
     if (type == "close"){
         document.getElementById("popupbg").remove()
@@ -293,7 +303,7 @@ function displayMessage(type, message, username, charInfo){
             nameplate.innerText = username
         var m = document.createElement("p")
             m.className = "message"
-            m.innerText = message
+            m.innerHTML = stylizeText(escapeHtml(message))
         payload.append(m) 
         payload.append(nameplate) 
     }
@@ -305,13 +315,13 @@ function displayMessage(type, message, username, charInfo){
                 nameplate.innerText = username
             var m = document.createElement("p")
                 m.className = "message"
-                m.innerText = message
+                m.innerHTML = stylizeText(escapeHtml(message))
                 d.append(m)
-            var char = document.createElement("img")
-                char.src = `${miiAPI}${charInfo.data}`
-                char.style = `background-color: ${char.background}; height: 32px;`
-                char.className = "mcdimg"
-                d.append(char)
+            // var char = document.createElement("img")
+            //     char.src = `${miiAPI}${charInfo.data}`
+            //     char.style = `background-color: ${char.background}; height: 32px;`
+            //     char.className = "mcdimg"
+            //     d.append(char)
         
         payload.append(d) 
         payload.append(nameplate) 
@@ -361,5 +371,27 @@ function changemuspitch(){
 
     
 }
-
+function stylizeText(text){
+  var t = text.split(" ")
+  var arr = []
+  for (let i = 0; i < t.length; i++) {
+    const element = t[i];
+    var final = element
+    // <e:http://example.com/>
+    if (element.includes("&lt;e:")){
+      console.log(element)
+      var url = element.replace("&lt;e:", "").replace("&gt;", "")
+      final = `<img class="emoji" src=${url}>`
+    }
+    // <img:http://example.com>
+    if (element.includes("&lt;img:")){
+      console.log(element)
+      var url = element.replace("&lt;img:", "").replace("&gt;", "")
+      final = `<img class="full" src=${url}>`
+    }
+    arr.push(final)
+  }
+  var fin = arr.join(' ')
+  return fin
+}
 indexButtons()

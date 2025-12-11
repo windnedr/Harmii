@@ -53,6 +53,9 @@ button{
     border: none;
     transition: 0.2s;
     color: #FFF;
+    /* border-style: solid inset;
+    border-width: 10px; */
+    /* border-image: url(./assets/button.svg) round 60 80 fill; */
 }
 button:hover, button:focus{
     transform: scale(1.04);
@@ -276,6 +279,7 @@ div#message{
     text-align: center;
     justify-content: flex-start;
     margin-right: 10px;
+    text-wrap: balance;
 }
 div#message.you{
     align-items: flex-end;
@@ -298,7 +302,7 @@ div#message.you{
     /* width: 545px;
     height: 80px; */
     
-
+    word-break: normal;
     color: #00000085;
     background: var(--shine);
     background-color: var(--nyou);
@@ -377,4 +381,19 @@ div#msgbar button{
     background-color: var(--you);
     border-radius: 1000px;
     max-width: 128px;
+}
+
+/* Images */
+img.full{
+    margin-top: 3px;
+    border-radius: 2px;
+    background: url(assets/dot2.svg), linear-gradient(180deg, #EAEAEA 0%, #DEDEDE 100%);
+    background-repeat: repeat, repeat-x;
+    background-size: auto, 100vh;
+    width: 100%;
+    max-height: 200px;
+}
+img.emoji{
+    aspect-ratio: 1;
+    height: 1ch;
 }
