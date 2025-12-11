@@ -1,0 +1,14 @@
+{
+  "categories": ["social", "messaging"],
+  "name": "Harmii",
+  "start_url": "/",
+  "display": "fullscreen",
+  "icons": [
+      {
+          "src": "/assets/harmiiWebappIcon.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+      }
+  ]
+}
