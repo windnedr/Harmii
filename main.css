@@ -399,7 +399,10 @@ div#msgbar button.upload{
     border-radius: 1000px;
     max-width: 128px;
 }
-
+div.nameplate{
+    display: flex;
+    gap: 7px;
+}
 /* Images */
 img.full{
     margin-top: 3px;
@@ -416,4 +419,15 @@ img.emoji{
     display: inline-block;
     position: relative;
     top: 4px;
+}
+img.pfp{
+    background-color: #7BA2FF;
+    z-index: 0;
+    aspect-ratio: 1;
+    font-size: 15px;
+    height: 3.5ch;
+    border-radius: 100px;
+    box-shadow: 0px 3px 5.8px rgba(142, 142, 142, 0.25), 0px 10px 12.6px rgba(47, 47, 47, 0.2);
+    
+    animation: message 0.5s cubic-bezier(0, 0, 0, 1);
 }

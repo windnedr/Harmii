@@ -9,14 +9,18 @@
 <body id="b">
     <button onclick="popup('settings')">Change Username</button>
     <button onclick="connectToWebsocket('ws://74.197.196.228:8080')">Connect</button>
+    <button onclick="connectToWebsocket('ws://harmony.nedr.dev')">Connect (nedr.dev)</button>
     <button onclick="connectToWebsocket('https://bookish-space-waffle-x74p775x7x63579-1548.app.github.dev/')">Connect (DEV)</button>
-    <button class="small" onclick="alert(document.cookie)">Show Cookies</button>
+    <button class="small" onclick="checkForUpdates()">Check for Updates</button>
 
     <img class="emoji" src="./assets/emojis/sob.svg">
 
     <div id="message" class="nyou">
         <p class="message">this is a <img class="emoji" src="./assets/emojis/happy.svg"> test</p>
-        <p class="username">Harmii</p>
+        <div class="nameplate">
+            <p class="username">Harmii</p>
+            <img class="pfp" src="https://mii-unsecure.ariankordi.net/miis/image.png?data=0903430308040315040d03630504170a030600060b0b000804000a0000355f0800080b031304170f04000a06060a">
+        </div>
     </div>
     <input type="file" accept="image/*" style="height: 0; width: 0; display: none; opacity: 0;" id="fileupload">
 
